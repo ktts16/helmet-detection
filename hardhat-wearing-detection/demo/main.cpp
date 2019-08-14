@@ -29,9 +29,9 @@ int main(int argc, char* argv[]) {
 
 	const char* kClassNames[] = { "__background__", "yellow", "red", "blue", "white", "none" };
 
-	Net net("../models/Pelee_RPA.prototxt");
-	net.CopyTrainedLayersFrom("../models/Pelee_RPA.caffemodel");
-	Mat img = imread("../imgs/demo.jpg");
+	Net net("../../models/Pelee_RPA.prototxt");
+	net.CopyTrainedLayersFrom("../../models/Pelee-RPA_Hardhat_iter_120000.caffemodel");
+	Mat img = imread("../../imgs/demo.jpg");
 
 	Profiler* profiler = Profiler::Get();
 	profiler->TurnON();
