@@ -1,3 +1,5 @@
+#define _snprintf_s(a,b,c,...) snprintf(a,b,__VA_ARGS__)
+
 #include <vector>
 #include <algorithm>
 #include <stdio.h>
