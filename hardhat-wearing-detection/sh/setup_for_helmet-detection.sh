@@ -5,8 +5,5 @@ export CAFFE_ROOT=$HOME/github/helmet-detection/hardhat-wearing-detection/SSD-RP
 export PYTHONPATH=$PYTHONPATH:$CAFFE_ROOT/python
 
 # install required Python packages
-
-sudo apt-get install python-matplotlib python-numpy python-pil python-scipy
-sudo apt-get install build-essential cython
-sudo apt-get install python-skimage
-pip install protobuf
+cd $CAFFE_ROOT/python 
+for req in $(cat requirements.txt); do pip install $req; done
