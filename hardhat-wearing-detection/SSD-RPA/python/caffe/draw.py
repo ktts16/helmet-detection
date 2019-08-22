@@ -32,6 +32,8 @@ BLOB_STYLE = {'shape': 'octagon',
               'fillcolor': '#E0E0E0',
               'style': 'filled'}
 
+# param_format = 1    #original
+param_format = 2    #new
 
 def get_pooling_types_dict():
     """Get dictionary mapping pooling type number to type name
@@ -57,6 +59,28 @@ def get_edge_label(layer):
         edge_label = '""'
 
     return edge_label
+
+
+def get_layer_attributes(layer):
+    attributes = ['%s' % (layer.name), '(%s)' % (layer.type)]
+    if layer.type == 'Convolution' or layer.type == 'Deconvolution':
+        param = layer.convolution_param
+        attribute_names = ['kernel_size', 'stride', 'pad']
+        format_strings = ['kernel size: %d', 'stride: %d', 'pad: %d']
+        default_values = [1, 1, 0]
+        for (n, s, d) in zip(attribute_names, format_strings, default_values):
+            obj = getattr(param, n)
+            ##print obj, type(obj)
+            attribute_value = -1
+            if param_format == 1:
+                attribute_value = d
+            if hasattr(obj, '_values') and len(getattr(obj, _values)):
+                attribute_value = obj[0]
+            attributes.append(s % (attribute_value))
+
+    attributes[0] = '"' + attributes[0]
+    attributes[-1] = attributes[-1] + '"'
+    return attributes
 
 
 def get_layer_label(layer, rankdir):
@@ -86,16 +110,20 @@ def get_layer_label(layer, rankdir):
     if layer.type == 'Convolution' or layer.type == 'Deconvolution':
         # Outer double quotes needed or else colon characters don't parse
         # properly
-        node_label = '"%s%s(%s)%skernel size: %d%sstride: %d%spad: %d"' %\
-                     (layer.name,
-                      separator,
-                      layer.type,
-                      separator,
-                      layer.convolution_param.kernel_size[0] if len(layer.convolution_param.kernel_size._values) else 1,
-                      separator,
-                      layer.convolution_param.stride[0] if len(layer.convolution_param.stride._values) else 1,
-                      separator,
-                      layer.convolution_param.pad[0] if len(layer.convolution_param.pad._values) else 0)
+        # node_label = '"%s%s(%s)%skernel size: %d%sstride: %d%spad: %d"' %\
+        #              (layer.name,
+        #               separator,
+        #               layer.type,
+        #               separator,
+        #               layer.convolution_param.kernel_size[0] if len(layer.convolution_param.kernel_size._values) else 1,
+        #               separator,
+        #               layer.convolution_param.stride[0] if len(layer.convolution_param.stride._values) else 1,
+        #               separator,
+        #               layer.convolution_param.pad[0] if len(layer.convolution_param.pad._values) else 0)
+
+        attributes = get_layer_attributes(layer)
+        node_label = separator.join(attributes)
+
     elif layer.type == 'Pooling':
         pooling_types_dict = get_pooling_types_dict()
         node_label = '"%s%s(%s %s)%skernel size: %d%sstride: %d%spad: %d"' %\
