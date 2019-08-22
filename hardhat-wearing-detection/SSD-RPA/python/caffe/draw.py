@@ -70,16 +70,18 @@ def get_layer_attributes(layer):
         default_values = [1, 1, 0]
         for (n, s, d) in zip(attribute_names, format_strings, default_values):
             obj = getattr(param, n)
-            ##print obj, type(obj)
             attribute_value = -1
             if param_format == 1:
                 attribute_value = d
+            elif param_format == 2:
+                attribute_value = next(iter(obj), -1)
             if hasattr(obj, '_values') and len(getattr(obj, _values)):
                 attribute_value = obj[0]
             attributes.append(s % (attribute_value))
 
     attributes[0] = '"' + attributes[0]
     attributes[-1] = attributes[-1] + '"'
+    print attributes
     return attributes
 
 
