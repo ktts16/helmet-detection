@@ -1,0 +1,10 @@
+item {
+  name: "hardhat"
+  label: 0
+  display_name: "hardhat"
+}
+item {
+  name: "none"
+  label: 1
+  display_name: "none"
+}
